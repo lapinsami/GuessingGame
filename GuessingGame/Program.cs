@@ -4,6 +4,7 @@ class Program
 {
     private static string playerName;
     private static int secretNumber = 13;
+    private static int difficulty = 0;
     private static HighScore[] highScores = new HighScore[5];
     
     private static void Main()
@@ -13,11 +14,14 @@ class Program
             highScores[i] = new HighScore("placeholder", 999999, 0);
         }
         
-        playerName = AskForPlayerName();
-        
         for (int i = 0; i < 5; i++)
         {
             highScores[i] = Game();
+
+            if (i >= 4)
+            {
+                break;
+            }
             
             Console.Write("Keep playing? (y/N)?: ");
             string? input = Console.ReadLine();
@@ -38,7 +42,17 @@ class Program
 
     private static HighScore Game()
     {
+        playerName = AskForPlayerName();
+        difficulty = AskForDifficulty();
         int numberOfGuesses = 0;
+
+        secretNumber = difficulty switch
+        {
+            0 => Random.Shared.Next(30),
+            1 => Random.Shared.Next(60),
+            2 => Random.Shared.Next(120),
+            _ => secretNumber
+        };
 
         while (true)
         {
@@ -48,7 +62,7 @@ class Program
             if (guess == secretNumber)
             {
                 Console.WriteLine("Correct!");
-                return new HighScore(playerName, numberOfGuesses, 0);
+                return new HighScore(playerName, numberOfGuesses, difficulty);
             }
 
             if (guess < secretNumber)
@@ -93,6 +107,37 @@ class Program
             }
 
             return guess;
+        }
+    }
+    
+    private static int AskForDifficulty()
+    {
+        Console.Write("Choose difficulty 1. easy (30), 2. medium (60), 3. hard (120): ");
+        int diff;
+        
+        while (true)
+        {
+            string? input = Console.ReadLine();
+
+            if (input == null)
+            {
+                Console.Write("Try again: ");
+                continue;
+            }
+
+            if (!int.TryParse(input, out diff))
+            {
+                Console.Write("Must be a number. Try again: ");
+                continue;
+            }
+
+            if (diff < 1 || diff > 3)
+            {
+                Console.Write("Must be 1, 2 or 3. Try again: ");
+                continue;
+            }
+
+            return diff - 1;
         }
     }
     
