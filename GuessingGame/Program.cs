@@ -44,6 +44,9 @@ class Program
     {
         playerName = AskForPlayerName();
         difficulty = AskForDifficulty();
+
+        Console.WriteLine("You have 30 seconds to guess");
+        
         int numberOfGuesses = 0;
 
         secretNumber = difficulty switch
@@ -53,15 +56,30 @@ class Program
             2 => Random.Shared.Next(120),
             _ => secretNumber
         };
+        
+        DateTime start = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
 
         while (true)
         {
             int guess = AskForNumber();
+            
+            now = DateTime.UtcNow;
+
+            if ((now - start).TotalSeconds > 30)
+            {
+                Console.WriteLine("Time's up!");
+                return new HighScore("placeholder", 999999, 0);
+            }
+            
             numberOfGuesses++;
 
             if (guess == secretNumber)
             {
-                Console.WriteLine("Correct!");
+                DateTime end = DateTime.UtcNow;
+                TimeSpan deltaTime = end - start;
+                
+                Console.WriteLine($"Correct! Took {deltaTime.TotalSeconds} seconds");
                 return new HighScore(playerName, numberOfGuesses, difficulty);
             }
 
