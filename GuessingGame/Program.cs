@@ -62,7 +62,13 @@ class Program
 
         while (true)
         {
-            int guess = AskForNumber();
+            if (numberOfGuesses > 9)
+            {
+                Console.WriteLine("Out of guesses!");
+                return new HighScore("placeholder", 999999, 0);
+            }
+            
+            int guess = AskForNumber(10 - numberOfGuesses);
             
             now = DateTime.UtcNow;
 
@@ -79,7 +85,7 @@ class Program
                 DateTime end = DateTime.UtcNow;
                 TimeSpan deltaTime = end - start;
                 
-                Console.WriteLine($"Correct! Took {deltaTime.TotalSeconds} seconds");
+                Console.WriteLine($"Correct! Took {Convert.ToInt32(deltaTime.TotalSeconds)} seconds");
                 return new HighScore(playerName, numberOfGuesses, difficulty);
             }
 
@@ -97,9 +103,9 @@ class Program
         }
     }
 
-    private static int AskForNumber()
+    private static int AskForNumber(int guessesLeft)
     {
-        Console.Write("Guess: ");
+        Console.Write($"Guess ({guessesLeft} left): ");
         int guess;
         
         while (true)
