@@ -2,21 +2,21 @@
 
 class Program
 {
-    private static string playerName;
-    private static int secretNumber = 13;
-    private static int difficulty = 0;
-    private static HighScore[] highScores = new HighScore[5];
+    private static string _playerName = "placeholder";
+    private static int _secretNumber = 13;
+    private static int _difficulty = 0;
+    private static HighScore[] _highScores = new HighScore[5];
     
     private static void Main()
     {
         for (int i = 0; i < 5; i++)
         {
-            highScores[i] = new HighScore("placeholder", 999999, 0);
+            _highScores[i] = new HighScore("placeholder", 999999, 0);
         }
         
         for (int i = 0; i < 5; i++)
         {
-            highScores[i] = Game();
+            _highScores[i] = Game();
 
             if (i >= 4)
             {
@@ -42,19 +42,19 @@ class Program
 
     private static HighScore Game()
     {
-        playerName = AskForPlayerName();
-        difficulty = AskForDifficulty();
+        _playerName = AskForPlayerName();
+        _difficulty = AskForDifficulty();
 
         Console.WriteLine("You have 30 seconds to guess");
         
         int numberOfGuesses = 0;
 
-        secretNumber = difficulty switch
+        _secretNumber = _difficulty switch
         {
             0 => Random.Shared.Next(30),
             1 => Random.Shared.Next(60),
             2 => Random.Shared.Next(120),
-            _ => secretNumber
+            _ => _secretNumber
         };
         
         DateTime start = DateTime.UtcNow;
@@ -80,22 +80,22 @@ class Program
             
             numberOfGuesses++;
 
-            if (guess == secretNumber)
+            if (guess == _secretNumber)
             {
                 DateTime end = DateTime.UtcNow;
                 TimeSpan deltaTime = end - start;
                 
                 Console.WriteLine($"Correct! Took {Convert.ToInt32(deltaTime.TotalSeconds)} seconds");
-                return new HighScore(playerName, numberOfGuesses, difficulty);
+                return new HighScore(_playerName, numberOfGuesses, _difficulty);
             }
 
-            if (guess < secretNumber)
+            if (guess < _secretNumber)
             {
                 Console.WriteLine("Too small!");
                 continue;
             }
             
-            if (guess > secretNumber)
+            if (guess > _secretNumber)
             {
                 Console.WriteLine("Too big!");
                 continue;
@@ -191,14 +191,14 @@ class Program
     
     private static void PrintHighScores()
     {
-        var sortedArray = highScores.OrderBy(i => i.guesses).ToArray();
+        var sortedArray = _highScores.OrderBy(i => i.guesses).ToArray();
 
         Console.WriteLine("Highscores:");
 
         int i = 1;
         foreach (var score in sortedArray)
         {
-            if (score.name == "placeholder")
+            if (score.name == "placeholder" && score.guesses == 999999)
             {
                 continue;
             }
