@@ -4,11 +4,11 @@ public class HighScore(string playerName, int numberOfGuesses, int difficultyLev
 {
     public string name = playerName;
     public int guesses = numberOfGuesses;
-    public int difficulty = difficultyLevel;
+    private int difficulty = difficultyLevel;
 
     public override string ToString()
     {
-        string difficultyLevelString = difficultyLevel switch
+        string difficultyLevelString = difficulty switch
         {
             0 => "easy",
             1 => "medium",

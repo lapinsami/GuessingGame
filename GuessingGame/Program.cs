@@ -17,7 +17,8 @@ class Program
         for (int i = 0; i < 5; i++)
         {
             _highScores[i] = Game();
-
+            
+            // Last game so no need to ask if the player wants to keep going
             if (i >= 4)
             {
                 break;
